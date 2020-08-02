@@ -25,6 +25,8 @@ Vue.mixin({
   },
 });
 
+Vue.prototype.$bus = new Vue();
+
 new Vue({
   router,
   render: (h) => h(App),

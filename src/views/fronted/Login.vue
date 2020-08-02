@@ -43,6 +43,7 @@
       >
         登入
       </button>
+      <button type="button" @click="eventBus">Event Bus</button>
     </form>
   </div>
 </template>
@@ -77,6 +78,9 @@ export default {
       }).catch(() => {
         this.isLoading = false;
       });
+    },
+    eventBus() {
+      this.$bus.$emit('alert:message', 'text');
     },
   },
 };

@@ -24,6 +24,16 @@ const routes = [
         name: '後台產品列表',
         component: () => import('../views/backend/Products.vue'),
       },
+      {
+        path: 'orders',
+        name: '後台訂單',
+        component: () => import('../views/backend/Orders.vue'),
+      },
+      {
+        path: 'coupon',
+        name: '後台優惠券',
+        component: () => import('../views/backend/Coupons.vue'),
+      },
     ],
   },
 ];

@@ -1,7 +1,12 @@
 <template>
   <div>
     <loading :active.sync="isLoading"></loading>
-    <Pagination />
+    <ul>
+      <li v-for="product in products" :key="product.id">
+        <h2>{{ product.title }}</h2>
+      </li>
+    </ul>
+    <Pagination :page="pagination" />
   </div>
 </template>
 
@@ -16,6 +21,7 @@ export default {
     return {
       isLoading: false,
       products: [],
+      pagination: {},
     };
   },
   created() {
@@ -24,12 +30,15 @@ export default {
   methods: {
     getProducts(page = 1) {
       this.isLoading = true;
+
       const api = `${process.env.VUE_APP_APIPATH}/${process.env.VUE_APP_UUID}/admin/ec/products?page=${page}`;
+
       this.$http.get(api).then((res) => {
-        console.log(res);
         this.products = res.data.data;
-      }).catch((err) => {
-        console.log(err);
+        this.pagination = res.data.meta.pagination;
+
+        this.isLoading = false;
+      }).catch(() => {
       });
     },
   },

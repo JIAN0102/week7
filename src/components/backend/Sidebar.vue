@@ -3,7 +3,7 @@
     <a
       class="navbar-brand"
       href="#"
-    >Vue 後台管理系統</a>
+    >Able Sisters 後台管理系統</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -24,7 +24,7 @@
         <li class="nav-item">
           <router-link
             class="nav-link"
-            to="/login"
+            to="/admin/products"
           >
             產品列表
           </router-link>
@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     signout() {
-      this.$cookie.remove('token');
+      this.$cookies.remove('token');
 
       this.$router.push('/login');
     },
