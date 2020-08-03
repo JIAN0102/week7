@@ -1,7 +1,9 @@
 <template>
   <div>
     <Sidebar />
-    <router-view />
+    <div class="px-5">
+      <router-view v-if="checkAuth" />
+    </div>
   </div>
 </template>
 
@@ -14,6 +16,7 @@ export default {
   },
   data() {
     return {
+      checkAuth: false,
     };
   },
   created() {
@@ -25,9 +28,12 @@ export default {
 
     this.$http.post(api, { api_token: token }).then((res) => {
       if (!res.data.success) {
+        this.checkAuth = false;
         this.$router.push('/login');
       }
+      this.checkAuth = true;
     }).catch(() => {
+      this.checkAuth = false;
       this.$router.push('/login');
     });
   },

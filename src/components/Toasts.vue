@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <!-- <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
         <img src="" class="rounded mr-2" alt="">
         <strong class="mr-auto">Bootstrap</strong>
@@ -12,7 +12,7 @@
       <div class="toast-body">
         See? Just like this.
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

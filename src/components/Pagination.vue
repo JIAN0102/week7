@@ -10,6 +10,7 @@
             class="page-link"
             href="#"
             aria-label="Previous"
+            @click.prevent="changePage(page.current_page - 1)"
           >
             <span aria-hidden="true">&laquo;</span>
           </a>
@@ -23,6 +24,7 @@
           <a
             class="page-link"
             href="#"
+            @click.prevent="changePage(item)"
           >
             {{ item }}
           </a>
@@ -35,6 +37,7 @@
             class="page-link"
             href="#"
             aria-label="Next"
+            @click.prevent="changePage(page.current_page + 1)"
           >
             <span aria-hidden="true">&raquo;</span>
           </a>
@@ -58,6 +61,12 @@ export default {
   data() {
     return {
     };
+  },
+  methods: {
+    changePage(nowPage) {
+      if (nowPage === this.page.current_page) return;
+      this.$emit('emit-pages', nowPage);
+    },
   },
 };
 </script>
