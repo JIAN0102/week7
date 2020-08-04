@@ -64,8 +64,8 @@ export default {
   },
   methods: {
     changePage(nowPage) {
-      if (nowPage === this.page.current_page) return;
-      this.$emit('emit-pages', nowPage);
+      // if (nowPage === this.page.current_page) return;
+      this.$emit('emitPages', nowPage);
     },
   },
 };

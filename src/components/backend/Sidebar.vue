@@ -47,7 +47,7 @@
         <li class="nav-item">
           <router-link
             class="nav-link"
-            to="/login"
+            to="/admin/orders"
           >
             訂單列表
           </router-link>
