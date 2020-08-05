@@ -1,9 +1,8 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a
-      class="navbar-brand"
-      href="#"
-    >Able Sisters 後台管理系統</a>
+    <router-link to="/admin" class="navbar-brand">
+      Able Sisters 後台管理系統
+    </router-link>
     <button
       class="navbar-toggler"
       type="button"
@@ -32,16 +31,16 @@
         <li class="nav-item">
           <router-link
             class="nav-link"
-            to="/login"
+            to="/admin/coupons"
           >
             優惠卷列表
           </router-link>
         </li><li class="nav-item">
           <router-link
             class="nav-link"
-            to="/login"
+            to="/admin/storages"
           >
-            圖片頁面
+            圖片管理
           </router-link>
         </li>
         <li class="nav-item">

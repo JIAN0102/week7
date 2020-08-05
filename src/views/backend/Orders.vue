@@ -97,6 +97,7 @@ export default {
       this.$http.get(api).then((res) => {
         this.orders = res.data.data;
         this.pagination = res.data.meta.pagination;
+
         this.isLoading = false;
       });
     },
@@ -112,8 +113,10 @@ export default {
       }
 
       this.$http.patch(api, order.id).then(() => {
-        this.getOrders();
+        this.isLoading = false;
 
+        this.getOrders();
+      }).catch(() => {
         this.isLoading = false;
       });
     },

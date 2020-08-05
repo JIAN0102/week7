@@ -30,9 +30,14 @@ const routes = [
         component: () => import('../views/backend/Orders.vue'),
       },
       {
-        path: 'coupon',
+        path: 'coupons',
         name: '後台優惠券',
         component: () => import('../views/backend/Coupons.vue'),
+      },
+      {
+        path: 'storages',
+        name: '圖片列表',
+        component: () => import('../views/backend/Storages.vue'),
       },
     ],
   },
