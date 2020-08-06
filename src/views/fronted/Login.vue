@@ -43,7 +43,6 @@
       >
         登入
       </button>
-      <button type="button" @click="eventBus">Event Bus</button>
     </form>
   </div>
 </template>
@@ -72,15 +71,16 @@ export default {
         // 登入成功將回傳的 token 以及 expired 寫入 cookie
         this.$cookies.set('token', token, new Date(expired * 1000));
 
+        this.$bus.$emit('message', `${res.data.message}`, 'success');
+
         this.isLoading = false;
 
         this.$router.push('/admin');
-      }).catch(() => {
+      }).catch((err) => {
+        this.$bus.$emit('message', `${err.response.data.message}`, 'danger');
+
         this.isLoading = false;
       });
-    },
-    eventBus() {
-      this.$bus.$emit('alert:message', 'text');
     },
   },
 };

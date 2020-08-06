@@ -10,8 +10,10 @@ import App from './App.vue';
 import router from './router';
 
 window.$ = jquery;
+
 Vue.use(VueAxios, axios);
 Vue.use(VueCookies);
+
 Vue.config.productionTip = false;
 
 Vue.component('Loading', Loading);
