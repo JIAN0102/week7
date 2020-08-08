@@ -302,14 +302,18 @@ export default {
         $('#couponModal').modal('hide');
 
         if (res.status === 200) {
+          console.log('成功跑這段');
           this.isLoading = false;
           this.$bus.$emit('message', couponStatus, 'success');
 
           this.getCoupons();
         } else {
+          console.log('但失敗不會跑這段，而是跑 catch');
           this.isLoading = false;
           this.$bus.$emit('message', couponStatus, 'danger');
         }
+      }).catch((err) => {
+        console.log('失敗會跑這段', err);
       });
     },
     deleteCoupon() {
