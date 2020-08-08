@@ -280,7 +280,7 @@
 </template>
 
 <script>
-/* global $ */
+import $ from 'jquery';
 import Pagination from '@/components/Pagination.vue';
 
 export default {
