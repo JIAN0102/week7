@@ -39,6 +39,11 @@ const routes = [
         name: '圖片列表',
         component: () => import('../views/backend/Storages.vue'),
       },
+      {
+        path: 'customer_orders',
+        name: '客戶訂單',
+        component: () => import('../views/backend/CustomerOrders.vue'),
+      },
     ],
   },
 ];

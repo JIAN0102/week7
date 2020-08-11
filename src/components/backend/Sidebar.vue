@@ -54,7 +54,7 @@
         <li class="nav-item">
           <router-link
             class="nav-link"
-            to="/login"
+            to="/admin/customer_orders"
           >
             模擬下單系統
           </router-link>

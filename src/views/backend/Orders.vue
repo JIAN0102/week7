@@ -90,7 +90,6 @@ export default {
   },
   methods: {
     getOrders(page = 1) {
-      console.log('開始讀取訂單');
       this.isLoading = true;
 
       const api = `${process.env.VUE_APP_APIPATH}/${process.env.VUE_APP_UUID}/admin/ec/orders?page=${page}`;

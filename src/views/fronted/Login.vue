@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <Loading :active.sync="isLoading" />
+
     <form
       class="form-signin"
       @submit.prevent="signin"
@@ -44,6 +45,7 @@
         登入
       </button>
     </form>
+
   </div>
 </template>
 

@@ -298,22 +298,18 @@ export default {
 
       this.tempCoupon.deadline_at = `${this.due_date} ${this.due_time}`;
 
-      this.$http[httpMethod](api, this.tempCoupon).then((res) => {
+      this.$http[httpMethod](api, this.tempCoupon).then(() => {
         $('#couponModal').modal('hide');
 
-        if (res.status === 200) {
-          console.log('成功跑這段');
-          this.isLoading = false;
-          this.$bus.$emit('message', couponStatus, 'success');
+        this.isLoading = false;
+        this.$bus.$emit('message', couponStatus, 'success');
 
-          this.getCoupons();
-        } else {
-          console.log('但失敗不會跑這段，而是跑 catch');
-          this.isLoading = false;
-          this.$bus.$emit('message', couponStatus, 'danger');
-        }
-      }).catch((err) => {
-        console.log('失敗會跑這段', err);
+        this.getCoupons();
+      }).catch(() => {
+        $('#couponModal').modal('hide');
+
+        this.isLoading = false;
+        this.$bus.$emit('message', '新增、修改 Coupon 發生錯誤', 'danger');
       });
     },
     deleteCoupon() {
