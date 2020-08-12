@@ -44,6 +44,11 @@ const routes = [
         name: '客戶訂單',
         component: () => import('../views/backend/CustomerOrders.vue'),
       },
+      {
+        path: 'customer_checkout/:id',
+        name: '客戶訂單列表',
+        component: () => import('../views/backend/CustomerCheckout.vue'),
+      },
     ],
   },
 ];

@@ -46,15 +46,25 @@
               <button
                 type="button"
                 class="btn btn-outline-primary btn-sm"
+                :disabled="status.loadingStatus === product.id"
                 @click="getProductDetail(product)"
               >
+                <i
+                  class="spinner-grow spinner-grow-sm"
+                  v-show="status.loadingStatus === product.id"
+                ></i>
                 查看產品細節
               </button>
               <button
                 type="button"
                 class="btn btn-outline-primary btn-sm"
+                :disabled="status.loadingStatus === product.id"
                 @click="addCart(product)"
               >
+                <i
+                  class="spinner-grow spinner-grow-sm"
+                  v-show="status.loadingStatus === product.id"
+                ></i>
                 加到購物車
               </button>
             </div>
@@ -102,6 +112,7 @@
                 <div class="input-group-prepend">
                   <button
                     class="btn btn-outline-primary"
+                    @click="updateQuantity(product, 1)"
                   >
                     +
                   </button>
@@ -115,6 +126,8 @@
                 <div class="input-group-append">
                   <button
                     class="btn btn-outline-primary"
+                    :disabled="product.quantity === 1"
+                    @click="updateQuantity(product, -1)"
                   >
                     -
                   </button>
@@ -138,8 +151,38 @@
               {{ cartTotal }}
             </td>
           </tr>
+          <tr v-if="coupon.enabled">
+            <td
+              colspan="4"
+              class="text-right text-success"
+            >
+              折扣價
+            </td>
+            <td
+              class="text-right text-success"
+            >
+              {{ cartTotal * (coupon.percent / 100) }}
+            </td>
+          </tr>
         </tfoot>
       </table>
+      <div class="input-group inpur-group-sm mb-3">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="請輸入優惠碼"
+          v-model="coupon_code"
+        >
+        <div class="input-group-append">
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            @click="addCoupon"
+          >
+            套用優惠碼
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="container my-5">
@@ -277,7 +320,7 @@
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 id="exampleModalLabel" class="modal-title">
@@ -294,7 +337,7 @@
           </div>
           <div class="modal-body">
             <img
-              :src="tempProduct.imageUrl"
+              :src="tempProduct.imageUrl[0]"
               class="img-fluid"
               :alt="tempProduct.title" />
             <blockquote class="blockquote mt-3">
@@ -331,10 +374,11 @@
             <button
               type="button"
               class="btn btn-primary"
+              :disabled="status.loadingStatus === tempProduct.id"
               @click="addCart(tempProduct, tempProduct.num)"
             >
               <i
-                class="fas fa-spinner fa-spin"
+                class="spinner-grow spinner-grow-sm"
                 v-show="status.loadingStatus === tempProduct.id"
               ></i>
               加到購物車
@@ -355,6 +399,7 @@ export default {
       isLoading: false,
       products: [],
       tempProduct: {
+        imageUrl: [],
         num: 0,
       },
       cart: [],
@@ -370,6 +415,8 @@ export default {
         payment: '',
         message: '',
       },
+      coupon: {},
+      coupon_code: '',
     };
   },
   created() {
@@ -423,6 +470,7 @@ export default {
       });
     },
     addCart(product, quantity = 1) {
+      this.status.loadingStatus = product.id;
       const api = `${process.env.VUE_APP_APIPATH}/${process.env.VUE_APP_UUID}/ec/shopping`;
 
       const cartParm = {
@@ -431,10 +479,18 @@ export default {
       };
 
       this.$http.post(api, cartParm).then(() => {
+        this.status.loadingStatus = '';
+
+        $('#productModal').modal('hide');
+
         this.$bus.$emit('message', '加入購物車成功', 'success');
 
         this.getCart();
       }).catch((err) => {
+        this.status.loadingStatus = '';
+
+        $('#productModal').modal('hide');
+
         this.$bus.$emit('message', err.response.data.errors[0], 'danger');
       });
     },
@@ -470,10 +526,63 @@ export default {
         this.isLoading = false;
       });
     },
+    updateQuantity(product, quantity) {
+      this.isLoading = true;
+
+      const newQuantity = product.quantity + quantity;
+
+      const api = `${process.env.VUE_APP_APIPATH}/${process.env.VUE_APP_UUID}/ec/shopping`;
+
+      const cartItem = {
+        product: product.product.id,
+        quantity: newQuantity,
+      };
+
+      this.$http.patch(api, cartItem).then(() => {
+        this.isLoading = false;
+
+        this.getCart();
+      }).catch((err) => {
+        this.$bus.$emit('message', err.response.data.message, 'danger');
+      });
+    },
+    addCoupon() {
+      this.isLoading = true;
+
+      const api = `${process.env.VUE_APP_APIPATH}/${process.env.VUE_APP_UUID}/ec/coupon/search`;
+
+      this.$http.post(api, { code: this.coupon_code }).then((res) => {
+        this.coupon = res.data.data;
+
+        this.isLoading = false;
+      }).catch((err) => {
+        this.$bus.$emit('message', err.response.data.message, 'danger');
+
+        this.isLoading = false;
+      });
+    },
     sendOrder() {
       this.isLoading = true;
 
-      // const api = `${process.env.VUE_APP_APIPATH}/${process.env.VUE_APP_UUID}/ec/orders`;
+      const api = `${process.env.VUE_APP_APIPATH}/${process.env.VUE_APP_UUID}/ec/orders`;
+
+      const order = JSON.parse(JSON.stringify(this.form));
+
+      if (this.coupon.enabled) {
+        order.coupon = this.coupon_code;
+      }
+
+      this.$http.post(api, order).then((res) => {
+        if (res.data.data.id) {
+          this.$router.push(`/admin/customer_checkout/${res.data.data.id}`);
+        }
+
+        this.isLoading = false;
+      }).catch((err) => {
+        this.$bus.$emit('message', err.response.data.message, 'danger');
+
+        this.isLoading = false;
+      });
     },
   },
 };

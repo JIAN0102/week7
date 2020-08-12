@@ -60,13 +60,13 @@ export default {
       this.removeMessage(timestamp);
     },
     removeMessage(timestamp) {
-      this.messages.forEach((message, index) => {
-        setTimeout(() => {
+      setTimeout(() => {
+        this.messages.forEach((message, index) => {
           if (message.timestamp === timestamp) {
             this.messages.splice(index, 1);
           }
-        }, 4000);
-      });
+        });
+      }, 4000);
     },
   },
 };
