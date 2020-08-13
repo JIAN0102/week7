@@ -13,7 +13,7 @@
             <div class="text-center">
               <img
                 class="img-fluid"
-                :src="product.imageUrl"
+                :src="product.imageUrl[0]"
                 :alt="product.title"
               >
             </div>

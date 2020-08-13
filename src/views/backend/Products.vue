@@ -101,9 +101,20 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label for="customFile">或 上傳圖片</label>
-                  <input id="customFile" ref="file" type="file" class="form-control">
-                  <!-- <span>檔案上傳中...</span> -->
+                  <label for="customFile">
+                    或 上傳圖片
+                    <i
+                      class="fas fa-spinner fa-spin"
+                      v-show="status.isUploading === true"
+                    />
+                  </label>
+                  <input
+                    type="file"
+                    id="customFile"
+                    ref="file"
+                    class="form-control"
+                    @change="uploadFile"
+                  >
                 </div>
                 <img
                   class="img-fluid"
@@ -296,6 +307,9 @@ export default {
       tempProduct: {
         imageUrl: [],
       },
+      status: {
+        isUploading: false,
+      },
     };
   },
   created() {
@@ -389,6 +403,37 @@ export default {
 
         this.getProducts();
       }).catch(() => {
+      });
+    },
+    uploadFile() {
+      const uploadFile = this.$refs.file.files[0];
+
+      this.$refs.file.type = 'text';
+      this.$refs.file.type = 'file';
+
+      const formData = new FormData();
+
+      formData.append('file', uploadFile);
+
+      const api = `${process.env.VUE_APP_APIPATH}/${process.env.VUE_APP_UUID}/admin/storage`;
+
+      this.status.isUploading = true;
+
+      this.$http.post(api, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }).then((res) => {
+        this.status.isUploading = false;
+
+        if (res.status === 200) {
+          this.$bus.$emit('message', '上傳圖片成功', 'success');
+          this.tempProduct.imageUrl.push(res.data.data.path);
+        }
+      }).catch((err) => {
+        this.status.isUploading = false;
+
+        this.$bus.$emit('message', err.response.data.message, 'danger');
       });
     },
   },
