@@ -329,9 +329,6 @@ export default {
       }).catch(() => {
       });
     },
-    getDetail() {
-      this.isLoading = true;
-    },
     openModal(type, product) {
       switch (type) {
         case 'create':
